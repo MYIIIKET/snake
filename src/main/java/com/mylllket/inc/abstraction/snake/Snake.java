@@ -2,9 +2,7 @@ package com.mylllket.inc.abstraction.snake;
 
 import com.mylllket.inc.Direction;
 import com.mylllket.inc.interfaces.actions.Drawable;
-import com.mylllket.inc.interfaces.actions.Growable;
 import com.mylllket.inc.interfaces.actions.Movable;
-import com.mylllket.inc.interfaces.actions.SnakeConsumer;
 import lombok.ToString;
 
 import java.awt.*;
@@ -13,7 +11,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 @ToString
-public abstract class Snake implements Movable, SnakeConsumer, Growable, Drawable {
+public abstract class Snake implements Movable, Drawable {
 
     private final Head head;
     private final List<Segment> body = new LinkedList<>();
@@ -22,6 +20,11 @@ public abstract class Snake implements Movable, SnakeConsumer, Growable, Drawabl
     public Snake(Head head) {
         this.head = head;
         body.add(head);
+    }
+
+    @Override
+    public void move() {
+        body.forEach(Segment::updatePosition);
     }
 
     @Override
@@ -47,19 +50,17 @@ public abstract class Snake implements Movable, SnakeConsumer, Growable, Drawabl
     private void updatePosition(Direction direction) {
         for (Segment segment : body) {
             Direction directionBeforeUpdate = segment.getDirection();
-            segment.updatePosition(direction);
+            segment.updateDirection(direction);
             direction = directionBeforeUpdate;
         }
     }
 
-    @Override
     public void consume(Food food) {
         if (head.hasTheSameCoordinateAs(food)) {
             consumedFood.add(food);
         }
     }
 
-    @Override
     public void growTail() {
         addTail();
         prepareTail();

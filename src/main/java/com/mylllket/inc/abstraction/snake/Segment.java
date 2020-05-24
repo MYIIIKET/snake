@@ -13,7 +13,7 @@ public abstract class Segment implements Drawable {
     private final SegmentCoordinate segmentCoordinate;
     private Direction direction;
 
-    void updatePosition(Direction direction) {
+    void updatePosition() {
         switch (direction) {
             case UP:
                 segmentCoordinate.updatePosition(0, -1);
@@ -30,7 +30,6 @@ public abstract class Segment implements Drawable {
             default:
                 throw new UnsupportedOperationException();
         }
-        this.direction = direction;
     }
 
     void updateDirection(Direction direction) {
