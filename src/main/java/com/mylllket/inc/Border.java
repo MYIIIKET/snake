@@ -31,10 +31,10 @@ public class Border implements Drawable {
     }
 
     public boolean outOfBorder(Coordinate coordinate) {
-        return size.getWidth() - this.coordinate.getX() < coordinate.getX()
-                || size.getHeight() - this.coordinate.getY() < coordinate.getY()
-                || this.coordinate.getX() > coordinate.getX() - this.coordinate.getX()
-                || this.coordinate.getY() > coordinate.getY() - this.coordinate.getY();
+        return size.getWidth() < coordinate.getX()
+                || size.getHeight() < coordinate.getY()
+                || this.coordinate.getX() > coordinate.getX()
+                || this.coordinate.getY() > coordinate.getY();
 
     }
 }
