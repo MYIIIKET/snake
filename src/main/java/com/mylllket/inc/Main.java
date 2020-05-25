@@ -59,6 +59,7 @@ public class Main {
         field.add(food);
         Runnable runnable = () -> {
             do {
+                field.repaint();
                 try {
                     TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException e) {
@@ -69,7 +70,6 @@ public class Main {
                     refreshFood(snake, food);
                 }
                 snake.growTail();
-                field.repaint();
             } while (!gameIsOver(snake, border));
         };
         Thread thread = new Thread(runnable);
