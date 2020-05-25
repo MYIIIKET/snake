@@ -58,7 +58,9 @@ public class Snake implements Movable, Drawable {
     }
 
     private void updatePosition(Direction direction) {
-        head.updateDirection(direction);
+        if (head.getDirection() != direction.getOpposite()) {
+            head.updateDirection(direction);
+        }
     }
 
     public boolean consume(Food food) {
