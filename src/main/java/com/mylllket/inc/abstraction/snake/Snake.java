@@ -81,29 +81,29 @@ public class Snake implements Movable, Drawable {
     }
 
     private void addTail() {
+        final Predicate<Food> foodPredicate;
         if (body.size() > 0) {
             Segment tail = body.getLast();
-            Predicate<Food> foodPredicate = food -> food.isProcessed() && coordinatesAreEqual(tail, food);
-            consumedFood.stream()
-                    .filter(foodPredicate)
-                    .findFirst()
-                    .ifPresent(food -> {
-                        Segment segment = new Segment(new Size(10, 10), Color.GREEN,
-                                new Coordinate(new Coordinate(food.getCoordinate())));
-                        body.add(segment);
-                    });
-            consumedFood.removeIf(foodPredicate);
+            foodPredicate = food -> food.isProcessed() && coordinatesAreEqual(tail, food);
+            addTail(foodPredicate);
         } else {
-            consumedFood.stream()
-                    .filter(Food::isProcessed)
-                    .findFirst()
-                    .ifPresent(food -> {
-                        Segment segment = new Segment(new Size(10, 10), Color.GREEN,
-                                new Coordinate(new Coordinate(food.getCoordinate())));
-                        body.add(segment);
-                    });
-            consumedFood.removeIf(Food::isProcessed);
+            foodPredicate = Food::isProcessed;
+            addTail(foodPredicate);
         }
+        consumedFood.removeIf(foodPredicate);
+    }
+
+    private void addTail(Predicate<Food> foodPredicate) {
+        consumedFood.stream()
+                .filter(foodPredicate)
+                .findFirst()
+                .ifPresent(this::addTail);
+    }
+
+    private void addTail(Food food) {
+        Segment segment = new Segment(new Size(10, 10), Color.GREEN,
+                new Coordinate(new Coordinate(food.getCoordinate())));
+        body.add(segment);
     }
 
     @Override
