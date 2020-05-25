@@ -61,7 +61,7 @@ public class Main {
                 }
                 snake.move();
                 if (snake.consume(food)) {
-                    food.updateCoordinate(new Coordinate(10 * random.nextInt(63), 10 * random.nextInt(47)));
+                    food.updateCoordinate(new Coordinate(10 * random.nextInt(5), 10 * random.nextInt(5)));
                 }
                 snake.growTail();
                 field.repaint();

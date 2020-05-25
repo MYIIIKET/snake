@@ -16,6 +16,10 @@ public class Food extends Segment {
         processed = true;
     }
 
+    public boolean isNotProcessed() {
+        return !isProcessed();
+    }
+
     public boolean isProcessed() {
         return processed;
     }

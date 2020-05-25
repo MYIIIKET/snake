@@ -9,7 +9,7 @@ import java.awt.geom.Ellipse2D;
 
 public class Segment extends Entity {
 
-    protected Segment(Size size, Color color, Coordinate coordinate) {
+    public Segment(Size size, Color color, Coordinate coordinate) {
         super(size, color, coordinate,
                 graphics -> {
                     graphics.setColor(color);
