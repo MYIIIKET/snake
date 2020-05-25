@@ -64,10 +64,14 @@ public class Snake implements Movable, Drawable {
     }
 
     public boolean consume(Food food) {
-        if (coordinatesAreEqual(head, food)) {
+        if (canConsume(food)) {
             return consumedFood.add(new Food(new Coordinate(food.getCoordinate())));
         }
         return false;
+    }
+
+    public boolean canConsume(Food food) {
+        return coordinatesAreEqual(head, food);
     }
 
     public void growTail() {

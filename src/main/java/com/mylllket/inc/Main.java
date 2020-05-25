@@ -11,11 +11,14 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        Head head = new Head(new Coordinate(0, 10));
-        Snake snake = new Snake(head);
-        Window window = new Window();
+        Head head = new Head(new Coordinate(10, 10));
+        Window window = new Window(500, 500);
         Field field = new Field();
         window.add(field);
+
+        Snake snake = new Snake(head);
+        field.add(snake);
+
         window.addKeyListener(new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -48,12 +51,15 @@ public class Main {
 
             }
         });
-        field.add(snake);
-        Random random = new Random();
-        Food food = new Food(new Coordinate(10 * random.nextInt(63), 10 * random.nextInt(47)));
+
+        Border border = new Border(new Size(400, 400), new Coordinate(10, 10));
+        field.add(border);
+
+        Food food = new Food(getNextFoodCoordinate());
+        refreshFood(snake, food);
         field.add(food);
         Runnable runnable = () -> {
-            while (true) {
+            do {
                 try {
                     TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException e) {
@@ -61,21 +67,33 @@ public class Main {
                 }
                 snake.move();
                 if (snake.consume(food)) {
-                    food.updateCoordinate(new Coordinate(10 * random.nextInt(5), 10 * random.nextInt(5)));
+                    refreshFood(snake, food);
                 }
                 snake.growTail();
                 field.repaint();
-                if (gameIsOver(snake)) {
-                    break;
-                }
-            }
+            } while (!gameIsOver(snake));
         };
         Thread thread = new Thread(runnable);
         thread.setDaemon(true);
         thread.start();
     }
 
+    private static void refreshFood(Snake snake, Food food) {
+        while (cannotCreate(food, snake)) {
+            food.updateCoordinate(getNextFoodCoordinate());
+        }
+    }
+
+    private static Coordinate getNextFoodCoordinate() {
+        Random random = new Random();
+        return new Coordinate(10 + 10 * random.nextInt(40), 10 + 10 * random.nextInt(40));
+    }
+
     private static boolean gameIsOver(Snake snake) {
         return snake.isNotValid();
+    }
+
+    private static boolean cannotCreate(Food food, Snake snake) {
+        return snake.canConsume(food);
     }
 }
