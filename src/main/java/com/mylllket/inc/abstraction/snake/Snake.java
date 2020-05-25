@@ -81,16 +81,20 @@ public class Snake implements Movable, Drawable {
     }
 
     private void addTail() {
+        final Predicate<Food> foodPredicate = getFoodPredicate();
+        addTail(foodPredicate);
+        consumedFood.removeIf(foodPredicate);
+    }
+
+    private Predicate<Food> getFoodPredicate() {
         final Predicate<Food> foodPredicate;
         if (body.size() > 0) {
             Segment tail = body.getLast();
             foodPredicate = food -> food.isProcessed() && coordinatesAreEqual(tail, food);
-            addTail(foodPredicate);
         } else {
             foodPredicate = Food::isProcessed;
-            addTail(foodPredicate);
         }
-        consumedFood.removeIf(foodPredicate);
+        return foodPredicate;
     }
 
     private void addTail(Predicate<Food> foodPredicate) {
