@@ -1,5 +1,6 @@
 package com.mylllket.inc.abstraction.snake;
 
+import com.mylllket.inc.Coordinate;
 import com.mylllket.inc.Direction;
 import com.mylllket.inc.interfaces.actions.Drawable;
 import com.mylllket.inc.interfaces.actions.Movable;
@@ -7,25 +8,31 @@ import com.mylllket.inc.interfaces.actions.Movable;
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
+import java.util.UUID;
 
 import static com.mylllket.inc.Utils.coordinatesAreEqual;
 
 public class Snake implements Movable, Drawable {
 
+    private final UUID id = UUID.randomUUID();
     private final Head head;
     private final List<Segment> body = new LinkedList<>();
     private final List<Food> consumedFood = new LinkedList<>();
-    private static final double step = 5;
+    private static final double step = 10;
 
     public Snake(Head head) {
         this.head = head;
-        body.add(head);
     }
 
     @Override
     public void move() {
-        body.forEach(segment -> segment.updatePosition(step));
+        Coordinate prev = new Coordinate(head.getCoordinate());
+        head.updatePosition(step);
+        for (Segment segment : body) {
+            Coordinate temp = new Coordinate(segment.getCoordinate());
+            segment.updateCoordinate(prev);
+            prev = new Coordinate(temp);
+        }
     }
 
     @Override
@@ -49,17 +56,14 @@ public class Snake implements Movable, Drawable {
     }
 
     private void updatePosition(Direction direction) {
-        for (Segment segment : body) {
-            Direction directionBeforeUpdate = segment.getDirection();
-            segment.updateDirection(direction);
-            direction = directionBeforeUpdate;
-        }
+        head.updateDirection(direction);
     }
 
-    public void consume(Food food) {
+    public boolean consume(Food food) {
         if (coordinatesAreEqual(head, food)) {
-            consumedFood.add(food);
+            return consumedFood.add(food);
         }
+        return false;
     }
 
     public void growTail() {
@@ -68,24 +72,38 @@ public class Snake implements Movable, Drawable {
     }
 
     private void prepareTail() {
-        Segment tail = body.get(body.size() - 1);
-        consumedFood.stream()
-                .filter(food -> coordinatesAreEqual(tail, food))
-                .findFirst()
-                .ifPresent(food -> food.updateDirection(tail.getDirection()));
+        if (body.size() > 0) {
+            Segment tail = body.get(body.size() - 1);
+            consumedFood.stream()
+                    .filter(food -> coordinatesAreEqual(tail, food))
+                    .findFirst()
+                    .ifPresent(Food::process);
+        } else {
+            consumedFood.stream().findFirst().ifPresent(Food::process);
+        }
     }
 
     private void addTail() {
-        final Predicate<Segment> foodIsNotIdle = food -> !food.getDirection().equals(Direction.IDLE);
         consumedFood.stream()
-                .filter(foodIsNotIdle)
+                .filter(Food::isProcessed)
                 .findFirst()
-                .ifPresent(body::add);
-        consumedFood.removeIf(foodIsNotIdle);
+                .ifPresent(food -> {
+                    Coordinate coordinate = new Coordinate(food.getCoordinate());
+                    Segment segment = new Head(coordinate);
+                    body.add(segment);
+//                    segment.updatePosition(-step);
+                });
+        consumedFood.removeIf(Food::isProcessed);
+    }
+
+    @Override
+    public UUID getId() {
+        return id;
     }
 
     @Override
     public void draw(Graphics2D graphics) {
+        head.draw(graphics);
         body.forEach(segment -> segment.draw(graphics));
     }
 }

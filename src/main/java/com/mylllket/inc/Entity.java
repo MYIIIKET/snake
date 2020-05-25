@@ -3,8 +3,10 @@ package com.mylllket.inc;
 import com.mylllket.inc.interfaces.actions.Drawable;
 
 import java.awt.*;
+import java.util.UUID;
 
 public abstract class Entity implements Drawable {
+    private final UUID id = UUID.randomUUID();
     private final Size size;
     private final Color color;
     private final Coordinate coordinate;
@@ -17,8 +19,17 @@ public abstract class Entity implements Drawable {
         this.drawingMethod = drawingMethod;
     }
 
-    protected Coordinate getCoordinate() {
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
+    public Coordinate getCoordinate() {
         return coordinate;
+    }
+
+    public void updateCoordinate(Coordinate coordinate) {
+        this.coordinate.update(coordinate);
     }
 
     @Override

@@ -6,11 +6,12 @@ import com.mylllket.inc.abstraction.snake.Snake;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        Head head = new Head(new Coordinate(5, 5));
+        Head head = new Head(new Coordinate(0, 10));
         Snake snake = new Snake(head);
         Window window = new Window();
         Field field = new Field();
@@ -48,17 +49,20 @@ public class Main {
             }
         });
         field.add(snake);
-        Food food = new Food(new Coordinate(30, 5));
+        Random random = new Random();
+        Food food = new Food(new Coordinate(10 * random.nextInt(63), 10 * random.nextInt(47)));
         field.add(food);
         Runnable runnable = () -> {
             while (true) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(500);
+                    TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
                 snake.move();
-                snake.consume(food);
+                if (snake.consume(food)) {
+                    food.updateCoordinate(new Coordinate(10 * random.nextInt(63), 10 * random.nextInt(47)));
+                }
                 snake.growTail();
                 field.repaint();
             }

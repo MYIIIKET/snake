@@ -7,7 +7,40 @@ import com.mylllket.inc.Size;
 import java.awt.*;
 
 public class Head extends Segment {
+    private Direction direction;
+
     public Head(Coordinate coordinate) {
-        super(new Size(10, 10), Color.GREEN, coordinate, Direction.IDLE);
+        super(new Size(10, 10), Color.GREEN, coordinate);
+        this.direction = Direction.IDLE;
+    }
+
+    public Head(Coordinate coordinate, Direction direction) {
+        super(new Size(10, 10), Color.GREEN, coordinate);
+        this.direction = direction;
+    }
+
+    void updatePosition(double delta) {
+        switch (direction) {
+            case UP:
+                getCoordinate().updatePosition(0, -delta);
+                break;
+            case DOWN:
+                getCoordinate().updatePosition(0, delta);
+                break;
+            case LEFT:
+                getCoordinate().updatePosition(-delta, 0);
+                break;
+            case RIGHT:
+                getCoordinate().updatePosition(delta, 0);
+                break;
+        }
+    }
+
+    void updateDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+    protected Direction getDirection() {
+        return direction;
     }
 }
