@@ -11,12 +11,11 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        Head head = new Head(new Coordinate(10, 10));
         Window window = new Window(500, 500);
         Field field = new Field();
         window.add(field);
 
-        Snake snake = new Snake(head);
+        Snake snake = new Snake(new Head(new Coordinate(200, 200)));
         field.add(snake);
 
         window.addKeyListener(new KeyListener() {
@@ -71,7 +70,7 @@ public class Main {
                 }
                 snake.growTail();
                 field.repaint();
-            } while (!gameIsOver(snake));
+            } while (!gameIsOver(snake, border));
         };
         Thread thread = new Thread(runnable);
         thread.setDaemon(true);
@@ -89,8 +88,8 @@ public class Main {
         return new Coordinate(10 + 10 * random.nextInt(40), 10 + 10 * random.nextInt(40));
     }
 
-    private static boolean gameIsOver(Snake snake) {
-        return snake.isNotValid();
+    private static boolean gameIsOver(Snake snake, Border border) {
+        return snake.isNotValid() || border.outOfBorder(snake.getHeadCoordinate());
     }
 
     private static boolean cannotCreate(Food food, Snake snake) {

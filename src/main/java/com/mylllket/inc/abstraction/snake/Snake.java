@@ -116,6 +116,10 @@ public class Snake implements Movable, Drawable {
         body.add(segment);
     }
 
+    public Coordinate getHeadCoordinate() {
+        return head.getCoordinate();
+    }
+
     @Override
     public UUID getId() {
         return id;

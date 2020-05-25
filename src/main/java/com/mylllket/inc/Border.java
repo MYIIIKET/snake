@@ -29,4 +29,12 @@ public class Border implements Drawable {
         graphics.setStroke(new BasicStroke(2));
         graphics.draw(new Rectangle2D.Double(coordinate.getX(), coordinate.getY(), size.getWidth(), size.getHeight()));
     }
+
+    public boolean outOfBorder(Coordinate coordinate) {
+        return size.getWidth() - this.coordinate.getX() < coordinate.getX()
+                || size.getHeight() - this.coordinate.getY() < coordinate.getY()
+                || this.coordinate.getX() > coordinate.getX() - this.coordinate.getX()
+                || this.coordinate.getY() > coordinate.getY() - this.coordinate.getY();
+
+    }
 }
