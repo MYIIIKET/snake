@@ -54,6 +54,9 @@ public class Main {
         Border border = new Border(new Size(400, 400), new Coordinate(10, 10));
         field.add(border);
 
+        Grid grid = new Grid(border);
+        field.add(grid);
+
         Food food = new Food(getNextFoodCoordinate());
         refreshFood(snake, food);
         field.add(food);

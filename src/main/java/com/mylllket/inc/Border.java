@@ -30,6 +30,14 @@ public class Border implements Drawable {
         graphics.draw(new Rectangle2D.Double(coordinate.getX(), coordinate.getY(), size.getWidth(), size.getHeight()));
     }
 
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+
+    public Size getSize() {
+        return size;
+    }
+
     public boolean outOfBorder(Coordinate coordinate) {
         return size.getWidth() < coordinate.getX()
                 || size.getHeight() < coordinate.getY()
