@@ -5,7 +5,12 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class Coordinate<T extends Number> {
-    private T x;
-    private T y;
+public class Coordinate {
+    private double x;
+    private double y;
+
+    public void updatePosition(double dx, double dy) {
+        x += dx;
+        y += dy;
+    }
 }

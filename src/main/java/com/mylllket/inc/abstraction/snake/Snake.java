@@ -3,19 +3,20 @@ package com.mylllket.inc.abstraction.snake;
 import com.mylllket.inc.Direction;
 import com.mylllket.inc.interfaces.actions.Drawable;
 import com.mylllket.inc.interfaces.actions.Movable;
-import lombok.ToString;
 
 import java.awt.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@ToString
-public abstract class Snake implements Movable, Drawable {
+import static com.mylllket.inc.Utils.coordinatesAreEqual;
+
+public class Snake implements Movable, Drawable {
 
     private final Head head;
     private final List<Segment> body = new LinkedList<>();
     private final List<Food> consumedFood = new LinkedList<>();
+    private static final double step = 5;
 
     public Snake(Head head) {
         this.head = head;
@@ -24,7 +25,7 @@ public abstract class Snake implements Movable, Drawable {
 
     @Override
     public void move() {
-        body.forEach(Segment::updatePosition);
+        body.forEach(segment -> segment.updatePosition(step));
     }
 
     @Override
@@ -56,7 +57,7 @@ public abstract class Snake implements Movable, Drawable {
     }
 
     public void consume(Food food) {
-        if (head.hasTheSameCoordinateAs(food)) {
+        if (coordinatesAreEqual(head, food)) {
             consumedFood.add(food);
         }
     }
@@ -69,9 +70,9 @@ public abstract class Snake implements Movable, Drawable {
     private void prepareTail() {
         Segment tail = body.get(body.size() - 1);
         consumedFood.stream()
-                .filter(tail::hasTheSameCoordinateAs)
+                .filter(food -> coordinatesAreEqual(tail, food))
                 .findFirst()
-                .ifPresent(preparedTail -> preparedTail.updateDirection(tail.getDirection()));
+                .ifPresent(food -> food.updateDirection(tail.getDirection()));
     }
 
     private void addTail() {

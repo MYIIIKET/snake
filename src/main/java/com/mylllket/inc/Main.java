@@ -1,6 +1,8 @@
 package com.mylllket.inc;
 
-import com.mylllket.inc.abstraction.snake.*;
+import com.mylllket.inc.abstraction.snake.Food;
+import com.mylllket.inc.abstraction.snake.Head;
+import com.mylllket.inc.abstraction.snake.Snake;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,12 +10,8 @@ import java.util.concurrent.TimeUnit;
 
 public class Main {
     public static void main(String[] args) {
-        Snake snake = new Snake(new Head(new SegmentCoordinate(new SegmentPosition(1) {
-        }, new SegmentPosition(1) {
-        }) {
-        }, Direction.RIGHT) {
-        }) {
-        };
+        Head head = new Head(new Coordinate(5, 5));
+        Snake snake = new Snake(head);
         Window window = new Window();
         Field field = new Field();
         window.add(field);
@@ -50,16 +48,12 @@ public class Main {
             }
         });
         field.add(snake);
-        Food food = new Food(new SegmentCoordinate(new SegmentPosition(10) {
-        }, new SegmentPosition(1) {
-        }) {
-        }) {
-        };
+        Food food = new Food(new Coordinate(30, 5));
         field.add(food);
         Runnable runnable = () -> {
             while (true) {
                 try {
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
