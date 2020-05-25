@@ -65,10 +65,17 @@ public class Main {
                 }
                 snake.growTail();
                 field.repaint();
+                if (gameIsOver(snake)) {
+                    break;
+                }
             }
         };
         Thread thread = new Thread(runnable);
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private static boolean gameIsOver(Snake snake) {
+        return snake.isNotValid();
     }
 }

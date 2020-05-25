@@ -122,4 +122,8 @@ public class Snake implements Movable, Drawable {
         head.draw(graphics);
         body.forEach(segment -> segment.draw(graphics));
     }
+
+    public boolean isNotValid() {
+        return body.stream().anyMatch(segment -> coordinatesAreEqual(segment, head));
+    }
 }
