@@ -137,6 +137,7 @@ public class Snake implements Movable, Drawable {
 
     public boolean clashesWith(Coordinate coordinate) {
         return coordinatesAreEqual(coordinate, head.getCoordinate())
-                || body.stream().anyMatch(segment -> coordinatesAreEqual(coordinate, segment.getCoordinate()));
+                || body.stream().anyMatch(segment -> coordinatesAreEqual(coordinate, segment.getCoordinate()))
+                || consumedFood.stream().anyMatch(food -> coordinatesAreEqual(coordinate, food.getCoordinate()));
     }
 }
