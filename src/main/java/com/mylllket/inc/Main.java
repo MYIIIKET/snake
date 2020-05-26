@@ -80,7 +80,12 @@ public class Main {
                 }
                 snake.move();
                 if (snake.consume(food)) {
-                    refreshFood(snake, cells, food);
+                    try {
+                        refreshFood(snake, cells, food);
+                    } catch (UnsupportedOperationException e) {
+                        System.out.println("You win");
+                        break;
+                    }
                 }
                 refresh(cells, snake, Optional.of(food));
                 snake.growTail();
