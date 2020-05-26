@@ -5,6 +5,8 @@ import com.mylllket.inc.Size;
 
 import java.awt.*;
 
+import static com.mylllket.inc.Utils.coordinatesAreEqual;
+
 public class Food extends Segment {
     private boolean processed = false;
 
@@ -22,5 +24,9 @@ public class Food extends Segment {
 
     public boolean isProcessed() {
         return processed;
+    }
+
+    public boolean clashesWith(Coordinate coordinate) {
+        return coordinatesAreEqual(coordinate, getCoordinate());
     }
 }

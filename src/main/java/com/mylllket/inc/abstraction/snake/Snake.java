@@ -134,4 +134,9 @@ public class Snake implements Movable, Drawable {
     public boolean isNotValid() {
         return body.stream().anyMatch(segment -> coordinatesAreEqual(segment, head));
     }
+
+    public boolean clashesWith(Coordinate coordinate) {
+        return coordinatesAreEqual(coordinate, head.getCoordinate())
+                || body.stream().anyMatch(segment -> coordinatesAreEqual(coordinate, segment.getCoordinate()));
+    }
 }
