@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class Main {
@@ -65,12 +64,13 @@ public class Main {
 //        field.add(grid);
 
         Cell[][] cells = toArray(border, snake, Optional.empty());
-        field.add(Arrays.stream(cells).flatMap(Arrays::stream).collect(Collectors.toList()));
+//        field.add(Arrays.stream(cells).flatMap(Arrays::stream).collect(Collectors.toList()));
 
         Food food = new Food(getNextFoodCoordinate(cells));
         refreshFood(snake, cells, food);
         field.add(food);
         Runnable runnable = () -> {
+            int score = 0;
             do {
                 field.repaint();
                 try {
@@ -80,6 +80,7 @@ public class Main {
                 }
                 snake.move();
                 if (snake.consume(food)) {
+                    score++;
                     try {
                         refreshFood(snake, cells, food);
                     } catch (UnsupportedOperationException e) {
@@ -91,6 +92,7 @@ public class Main {
                 snake.growTail();
             } while (!gameIsOver(snake, border));
             System.out.println("Game is over");
+            System.out.println(score);
         };
         Thread thread = new Thread(runnable);
         thread.setDaemon(true);

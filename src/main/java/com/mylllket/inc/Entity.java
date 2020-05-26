@@ -24,6 +24,14 @@ public abstract class Entity implements Drawable {
         return id;
     }
 
+    protected Color getColor() {
+        return color;
+    }
+
+    protected Size getSize() {
+        return size;
+    }
+
     public Coordinate getCoordinate() {
         return coordinate;
     }

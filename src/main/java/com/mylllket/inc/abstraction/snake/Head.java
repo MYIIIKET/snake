@@ -10,7 +10,7 @@ public class Head extends Segment {
     private Direction direction;
 
     public Head(Coordinate coordinate) {
-        super(new Size(10, 10), Color.YELLOW, coordinate);
+        super(new Size(10, 10), Color.GRAY, coordinate);
         this.direction = Direction.IDLE;
     }
 
