@@ -24,6 +24,25 @@ public class Snake implements Movable, Drawable {
 
     public Snake(Head head) {
         this.head = head;
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 80)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 90)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 100)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 110)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 120)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 130)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(70, 140)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(60, 140)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(50, 140)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(40, 140)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(30, 140)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(20, 140)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(20, 130)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(20, 120)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(20, 110)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(20, 100)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(30, 100)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(40, 100)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(50, 100)));
     }
 
     @Override
