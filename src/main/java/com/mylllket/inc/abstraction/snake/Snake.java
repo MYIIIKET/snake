@@ -43,6 +43,7 @@ public class Snake implements Movable, Drawable {
         body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(30, 100)));
         body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(40, 100)));
         body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(50, 100)));
+        body.add(new Segment(new Size(10, 10), Color.GREEN, new Coordinate(60, 100)));
     }
 
     @Override

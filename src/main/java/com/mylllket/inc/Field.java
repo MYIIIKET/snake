@@ -4,13 +4,16 @@ import com.mylllket.inc.interfaces.actions.Drawable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collections;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Field extends JPanel {
-    private final Map<UUID, Drawable> drawables = new HashMap<>();
+    private final Map<UUID, Drawable> drawables = new ConcurrentHashMap<>();
 
     public Field() {
         setBackground(Color.WHITE);

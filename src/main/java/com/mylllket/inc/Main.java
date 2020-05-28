@@ -31,7 +31,7 @@ public class Main {
 
         Cell[][] cells = toArray(border, snake);
         Coordinate start = new Coordinate(70, 70);
-        Coordinate end = new Coordinate(50, 100);
+        Coordinate end = new Coordinate(50, 110);
         AStar aStar = new AStar(cells, start, end);
         field.add(aStar);
 //        field.add(aStar);
@@ -156,6 +156,7 @@ public class Main {
         private final LinkedList<Coordinate> path = new LinkedList<>();
         private final Coordinate start;
         private final Coordinate end;
+        private int visitedNodes = 0;
 
         private AStar(Cell[][] cells, Coordinate start, Coordinate end) {
             this.cells = Arrays.stream(cells)
@@ -176,9 +177,11 @@ public class Main {
 
 
         public void buildPath() {
+            visitedNodes = 0;
             Runnable runnable = () -> {
                 path.clear();
                 while (isMoreToVisit() && !getCell(end).visited) {
+                    int visitedNodesPrev = visitedNodes;
                     try {
                         TimeUnit.MILLISECONDS.sleep(100);
                     } catch (InterruptedException e) {
@@ -194,13 +197,16 @@ public class Main {
                                     .forEach(c2 -> {
                                         int i = (int) (c2.getCoordinate().getX() / 10) - 1;
                                         int j = (int) (c2.getCoordinate().getY() / 10) - 1;
-                                        AStarCell prev = cells[i][j];
-                                        visit(prev, i - 1, j);
-                                        visit(prev, i + 1, j);
-                                        visit(prev, i, j - 1);
-                                        visit(prev, i, j + 1);
+                                        visit(i - 1, j);
+                                        visit(i + 1, j);
+                                        visit(i, j - 1);
+                                        visit(i, j + 1);
                                     }));
+                    if (visitedNodesPrev == visitedNodes) {
+                        break;
+                    }
                 }
+                System.out.printf("Finished");
                 Coordinate e = new Coordinate(end);
                 path.add(e);
 
@@ -218,6 +224,7 @@ public class Main {
                     Optional<AStarCell> downNeighbor = getNeighbor(i, j + 1);
                     Optional<AStarCell> leftNeighbor = getNeighbor(i - 1, j);
                     Optional<AStarCell> rightNeighbor = getNeighbor(i + 1, j);
+                    int before = path.size();
                     Optional<AStarCell> first = Stream.of(upNeighbor, downNeighbor, leftNeighbor, rightNeighbor)
                             .filter(Optional::isPresent)
                             .map(Optional::get)
@@ -236,6 +243,9 @@ public class Main {
                             .min(Comparator.comparingDouble(AStarCell::getHeuristicDistance))
                             .map(Cell::getCoordinate)
                             .ifPresent(coordinate -> path.add(new Coordinate(coordinate)));
+                    if (path.size() == before) {
+                        break;
+                    }
                     last = new Coordinate(path.getLast());
                 }
             };
@@ -252,11 +262,15 @@ public class Main {
             }
         }
 
-        private void visit(AStarCell prev, int i, int j) {
+        private void visit(int i, int j) {
             try {
                 AStarCell cell = cells[i][j];
+                boolean visited = cell.visited;
                 if (!cell.isBusy()) {
-                    cell.visit(prev);
+                    cell.visit();
+                }
+                if(!cell.isBusy() && !visited){
+                    visitedNodes++;
                 }
             } catch (Exception ignored) {
             }
@@ -342,7 +356,7 @@ public class Main {
                 this.heuristicDistance = heuristicDistance;
             }
 
-            public void visit(AStarCell prev) {
+            public void visit() {
                 heuristicDistance -= 10;
                 visited = true;
             }
