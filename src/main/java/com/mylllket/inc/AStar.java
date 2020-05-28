@@ -1,5 +1,6 @@
 package com.mylllket.inc;
 
+import com.mylllket.inc.abstraction.snake.Segment;
 import com.mylllket.inc.interfaces.actions.Drawable;
 
 import java.awt.*;
@@ -14,17 +15,19 @@ public class AStar implements Drawable {
     private final Coordinate start;
     private final Coordinate end;
     private int visitedNodes = 0;
+    private Segment[] exceptions;
 
-    public AStar(Cell[][] cells, Coordinate start, Coordinate end) {
+    public AStar(Cell[][] cells, Coordinate start, Coordinate end, Segment... exceptions) {
+        this.exceptions = exceptions;
         this.cells = Arrays.stream(cells)
                 .map(c1 -> Arrays.stream(c1)
                         .map(cell -> {
                             Coordinate coordinate = cell.getCoordinate();
                             double heuristicDistance = Math.abs(coordinate.getX() - end.getX()) + Math.abs(coordinate.getY() - end.getY());
                             if (Utils.coordinatesAreEqual(coordinate, start)) {
-                                return new AStarCell(cell, heuristicDistance, true);
+                                return new AStarCell(cell, heuristicDistance, true, false);
                             }
-                            return new AStarCell(cell, heuristicDistance);
+                            return new AStarCell(cell, heuristicDistance, isNotException(cell) && cell.isBusy());
                         })
                         .toArray(AStarCell[]::new))
                 .toArray(AStarCell[][]::new);
@@ -32,9 +35,10 @@ public class AStar implements Drawable {
         this.end = new Coordinate(end);
     }
 
-    public void update(Cell[][] cells, Coordinate newStart, Coordinate newEnd) {
+    public void update(Cell[][] cells, Coordinate newStart, Coordinate newEnd, Segment... newExceptions) {
         start.update(newStart);
         end.update(newEnd);
+        exceptions = newExceptions;
         path.clear();
         visitedNodes = 0;
         Arrays.stream(cells).flatMap(Arrays::stream).forEach(this::reinitialize);
@@ -48,8 +52,14 @@ public class AStar implements Drawable {
         if (!Utils.coordinatesAreEqual(start, aStarCell.getCoordinate())) {
             aStarCell.reset();
         }
-        aStarCell.updateStatus(cell.isBusy());
+        aStarCell.updateStatus(isNotException(cell) && cell.isBusy());
         aStarCell.updateHeuristicDistance(end);
+    }
+
+    private boolean isNotException(Cell cell) {
+        return Arrays.stream(exceptions)
+                .map(Entity::getCoordinate)
+                .noneMatch(coordinate -> Utils.coordinatesAreEqual(coordinate, cell.getCoordinate()));
     }
 
     public void buildPath() {
@@ -58,7 +68,7 @@ public class AStar implements Drawable {
         }
         visitedNodes = 0;
         path.clear();
-        while (isMoreToVisit() && !getCell(end).isVisited()) {
+        while (isMoreToVisit()) {
             int visitedNodesPrev = visitedNodes;
             AStarCell[][] aStarCells = Arrays.stream(cells)
                     .map(c1 -> Arrays.stream(c1)
@@ -70,10 +80,11 @@ public class AStar implements Drawable {
                             .forEach(c2 -> {
                                 int i = (int) (c2.getCoordinate().getX() / 10) - 1;
                                 int j = (int) (c2.getCoordinate().getY() / 10) - 1;
-                                visit(i - 1, j);
-                                visit(i + 1, j);
-                                visit(i, j - 1);
-                                visit(i, j + 1);
+                                AStarCell prev = cells[i][j];
+                                visit(prev, i - 1, j);
+                                visit(prev, i + 1, j);
+                                visit(prev, i, j - 1);
+                                visit(prev, i, j + 1);
                             }));
             if (visitedNodesPrev == visitedNodes) {
                 break;
@@ -103,9 +114,9 @@ public class AStar implements Drawable {
             Stream.of(upNeighbor, downNeighbor, leftNeighbor, rightNeighbor)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .filter(r -> r.isNotBusy() || Utils.coordinatesAreEqual(r.getCoordinate(), this.start))
+                    .filter(Cell::isNotBusy)
                     .filter(AStarCell::isVisited)
-                    .filter(r -> path.stream().noneMatch(e1 -> Utils.coordinatesAreEqual(e1, r.getCoordinate())))
+                    .filter(cell -> path.stream().noneMatch(coordinate -> Utils.coordinatesAreEqual(coordinate, cell.getCoordinate())))
                     .min(Comparator.comparingDouble(AStarCell::getHeuristicDistance))
                     .map(Cell::getCoordinate)
                     .ifPresent(coordinate -> path.add(new Coordinate(coordinate)));
@@ -124,12 +135,14 @@ public class AStar implements Drawable {
         }
     }
 
-    private void visit(int i, int j) {
+    private void visit(AStarCell prev, int i, int j) {
         try {
             AStarCell cell = cells[i][j];
-            boolean visitedBefore = cell.visited;
+            boolean visitedBefore = cell.isVisited();
             if (!cell.isBusy()) {
-                cell.visit();
+                if (!visitedBefore) {
+                    cell.visit(+prev.getHeuristicDistance());
+                }
             }
             if (!cell.isBusy() && !visitedBefore) {
                 visitedNodes++;
@@ -141,7 +154,7 @@ public class AStar implements Drawable {
     public boolean isMoreToVisit() {
         return Arrays.stream(cells)
                 .anyMatch(c1 -> Arrays.stream(c1)
-                        .filter(c2 -> c2.visited)
+                        .filter(AStarCell::isVisited)
                         .anyMatch(this::moreToVisit));
     }
 
@@ -202,14 +215,14 @@ public class AStar implements Drawable {
         private boolean visited = false;
         private double heuristicDistance;
 
-        public AStarCell(Cell cell, double heuristicDistance, boolean visited) {
-            super(new Coordinate(cell.getCoordinate()), cell.isBusy());
+        public AStarCell(Cell cell, double heuristicDistance, boolean visited, boolean isBusy) {
+            super(new Coordinate(cell.getCoordinate()), isBusy);
             this.heuristicDistance = heuristicDistance;
             this.visited = visited;
         }
 
-        public AStarCell(Cell cell, double heuristicDistance) {
-            super(new Coordinate(cell.getCoordinate()), cell.isBusy());
+        public AStarCell(Cell cell, double heuristicDistance, boolean isBusy) {
+            super(new Coordinate(cell.getCoordinate()), isBusy);
             this.heuristicDistance = heuristicDistance;
         }
 
@@ -222,8 +235,8 @@ public class AStar implements Drawable {
             visited = false;
         }
 
-        public void visit() {
-            heuristicDistance -= 10;
+        public void visit(double delta) {
+            heuristicDistance += delta;
             visited = true;
         }
 

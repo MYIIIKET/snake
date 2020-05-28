@@ -37,7 +37,7 @@ public class Main {
         field.add(food);
 
         refresh(cells, snake, Optional.of(food));
-        AStar aStar = new AStar(cells, new Coordinate(head.getCoordinate()), new Coordinate(food.getCoordinate()));
+        AStar aStar = new AStar(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(snake.getTailCoordinate()), food);
         field.add(aStar);
         aStar.buildPath();
 
@@ -96,7 +96,7 @@ public class Main {
                 }
                 snake.move();
                 refresh(cells, snake, Optional.of(food));
-                aStar.update(cells, new Coordinate(head.getCoordinate()), new Coordinate(food.getCoordinate()));
+                aStar.update(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(snake.getTailCoordinate()), food);
                 aStar.buildPath();
             }
 

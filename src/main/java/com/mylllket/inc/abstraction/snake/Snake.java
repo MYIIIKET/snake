@@ -140,6 +140,10 @@ public class Snake implements Movable, Drawable {
         return head.getCoordinate();
     }
 
+    public Coordinate getTailCoordinate() {
+        return getTail().getCoordinate();
+    }
+
     @Override
     public UUID getId() {
         return id;
@@ -149,6 +153,10 @@ public class Snake implements Movable, Drawable {
     public void draw(Graphics2D graphics) {
         head.draw(graphics);
         body.forEach(segment -> segment.draw(graphics));
+    }
+
+    private Segment getTail() {
+        return body.size() > 0 ? body.getLast() : head;
     }
 
     public boolean isNotValid() {
