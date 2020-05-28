@@ -9,7 +9,6 @@ import java.awt.event.KeyListener;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.Random;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
@@ -28,8 +27,8 @@ public class Main {
         Border border = new Border(new Size(300, 300), new Coordinate(10, 10));
         field.add(border);
 
-//        Grid grid = new Grid(border);
-//        field.add(grid);
+        Grid grid = new Grid(border);
+        field.add(grid);
 
         Cell[][] cells = toArray(border, snake);
 
@@ -97,7 +96,7 @@ public class Main {
                 }
                 snake.move();
                 refresh(cells, snake, Optional.of(food));
-                aStar.update(cells, new Coordinate(head.getCoordinate()),new Coordinate(food.getCoordinate()));
+                aStar.update(cells, new Coordinate(head.getCoordinate()), new Coordinate(food.getCoordinate()));
                 aStar.buildPath();
             }
 
