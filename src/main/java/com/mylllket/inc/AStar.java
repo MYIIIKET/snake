@@ -41,6 +41,9 @@ public class AStar implements Drawable {
     }
 
     private void reinitialize(Cell cell) {
+        if (Utils.coordinatesAreEqual(start, end)) {
+            return;
+        }
         AStarCell aStarCell = getCell(cell.getCoordinate());
         if (!Utils.coordinatesAreEqual(start, aStarCell.getCoordinate())) {
             aStarCell.reset();
@@ -50,6 +53,9 @@ public class AStar implements Drawable {
     }
 
     public void buildPath() {
+        if (Utils.coordinatesAreEqual(start, end)) {
+            return;
+        }
         visitedNodes = 0;
         path.clear();
         while (isMoreToVisit() && !getCell(end).isVisited()) {
