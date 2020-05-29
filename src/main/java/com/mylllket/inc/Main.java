@@ -20,11 +20,11 @@ public class Main {
 
 //        startFieldRenderer(field);
 
-        Head head = new Head(new Coordinate(10, 10));
+        Head head = new Head(new Coordinate(100, 100));
         Snake snake = new Snake(head);
         field.add(snake);
 
-        Border border = new Border(new Size(50, 50), new Coordinate(10, 10));
+        Border border = new Border(new Size(50, 50), new Coordinate(100, 100));
         field.add(border);
 
         Grid grid = new Grid(border);
@@ -37,7 +37,7 @@ public class Main {
         field.add(food);
 
         refresh(cells, snake, Optional.of(food));
-        AStar aStar = new AStar(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(food.getCoordinate()), food);
+        AStar aStar = new AStar(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(food.getCoordinate()), border.getCoordinate().getX(), border.getCoordinate().getY(), food);
         field.add(aStar);
         aStar.buildPath();
 
@@ -134,7 +134,7 @@ public class Main {
         IntStream.range(0, cols)
                 .forEach(col -> IntStream.range(0, rows)
                         .forEach(row -> {
-                            Coordinate coordinate = new Coordinate((col + 1) * step, (row + 1) * step);
+                            Coordinate coordinate = new Coordinate((col + 1) * step + border.getCoordinate().getX() - step, (row + 1) * step + border.getCoordinate().getY() - step);
                             boolean isBusy = snake.clashesWith(coordinate);
                             cells[col][row] = new Cell(coordinate, isBusy);
                         }));

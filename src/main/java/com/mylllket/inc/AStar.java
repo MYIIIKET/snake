@@ -20,8 +20,10 @@ public class AStar implements Drawable {
     private final Coordinate end;
     private int visitedNodes = 0;
     private Segment[] exceptions;
+    private final double normX;
+    private final double normY;
 
-    public AStar(Cell[][] cells, Coordinate start, Coordinate end, Segment... exceptions) {
+    public AStar(Cell[][] cells, Coordinate start, Coordinate end, double normX, double normY, Segment... exceptions) {
         this.exceptions = exceptions;
         this.cells = Arrays.stream(cells)
                 .map(c1 -> Arrays.stream(c1)
@@ -37,6 +39,8 @@ public class AStar implements Drawable {
                 .toArray(AStarCell[][]::new);
         this.start = new Coordinate(start);
         this.end = new Coordinate(end);
+        this.normX = normX;
+        this.normY = normY;
     }
 
     public void update(Cell[][] cells, Coordinate newStart, Coordinate newEnd, Segment... newExceptions) {
@@ -84,8 +88,8 @@ public class AStar implements Drawable {
             Arrays.stream(aStarCells)
                     .forEach(c1 -> Arrays.stream(c1)
                             .forEach(c2 -> {
-                                int i = (int) (c2.getCoordinate().getX() / 10) - 1;
-                                int j = (int) (c2.getCoordinate().getY() / 10) - 1;
+                                int i = (int) (c2.getCoordinate().getX() - normX) / 10;
+                                int j = (int) (c2.getCoordinate().getY() - normY) / 10;
                                 AStarCell prev = cells[i][j];
                                 visit(prev, i - 1, j);
                                 visit(prev, i + 1, j);
@@ -101,8 +105,8 @@ public class AStar implements Drawable {
         path.add(e);
         Coordinate last = new Coordinate(path.getLast());
         while (!Utils.coordinatesAreEqual(last, start)) {
-            int i = (int) (last.getX() / 10) - 1;
-            int j = (int) (last.getY() / 10) - 1;
+            int i = (int) (last.getX() - normX) / 10;
+            int j = (int) (last.getY() - normY) / 10;
             Optional<AStarCell> upNeighbor = getNeighbor(i, j - 1);
             Optional<AStarCell> downNeighbor = getNeighbor(i, j + 1);
             Optional<AStarCell> leftNeighbor = getNeighbor(i - 1, j);
@@ -165,8 +169,8 @@ public class AStar implements Drawable {
     }
 
     private boolean moreToVisit(AStarCell cell) {
-        int i = (int) (cell.getCoordinate().getX() / 10) - 1;
-        int j = (int) (cell.getCoordinate().getY() / 10) - 1;
+        int i = (int) (cell.getCoordinate().getX() - normX) / 10;
+        int j = (int) (cell.getCoordinate().getY() - normY) / 10;
         boolean downIsNotVisited = validateBoundary(i, j + 1);
         boolean leftIsNotVisited = validateBoundary(i - 1, j);
         boolean rightIsNotVisited = validateBoundary(i + 1, j);
@@ -185,8 +189,8 @@ public class AStar implements Drawable {
     }
 
     private AStarCell getCell(Coordinate coordinate) {
-        int i = (int) (coordinate.getX() / 10) - 1;
-        int j = (int) (coordinate.getY() / 10) - 1;
+        int i = (int) (coordinate.getX() - normX) / 10;
+        int j = (int) (coordinate.getY() - normY) / 10;
         return cells[i][j];
     }
 
