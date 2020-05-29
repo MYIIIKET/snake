@@ -39,8 +39,8 @@ public class Border implements Drawable {
     }
 
     public boolean outOfBorder(Coordinate coordinate) {
-        return size.getWidth() < coordinate.getX()
-                || size.getHeight() < coordinate.getY()
+        return (size.getWidth() + this.coordinate.getX() - 10) < coordinate.getX()
+                || (size.getHeight() + this.coordinate.getY() - 10) < coordinate.getY()
                 || this.coordinate.getX() > coordinate.getX()
                 || this.coordinate.getY() > coordinate.getY();
 

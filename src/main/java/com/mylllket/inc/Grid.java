@@ -24,8 +24,8 @@ public class Grid implements Drawable {
     @Override
     public void draw(Graphics2D graphics) {
 
-        final int widthLinesNumber = (int) (border.getSize().getWidth() / step);
-        final int heightLinesNumber = (int) (border.getSize().getHeight() / step);
+        final int widthLinesNumber = (int) (border.getSize().getWidth() / step) - 1;
+        final int heightLinesNumber = (int) (border.getSize().getHeight() / step) - 1;
         IntStream.rangeClosed(1, widthLinesNumber)
                 .forEach(lineNumber -> {
                     graphics.setColor(Color.BLACK);
@@ -34,7 +34,7 @@ public class Grid implements Drawable {
                             border.getCoordinate().getX() + lineNumber * step,
                             border.getCoordinate().getY(),
                             border.getCoordinate().getX() + lineNumber * step,
-                            border.getSize().getWidth() + step));
+                            border.getCoordinate().getY() + border.getSize().getHeight()));
                 });
         IntStream.rangeClosed(1, heightLinesNumber)
                 .forEach(lineNumber -> {
@@ -43,7 +43,7 @@ public class Grid implements Drawable {
                     graphics.draw(new Line2D.Double(
                             border.getCoordinate().getX(),
                             border.getCoordinate().getY() + lineNumber * step,
-                            border.getSize().getHeight() + step,
+                            border.getCoordinate().getX() + border.getSize().getWidth(),
                             border.getCoordinate().getY() + lineNumber * step));
                 });
     }
