@@ -50,7 +50,9 @@ public class AStar implements Drawable {
         }
         AStarCell aStarCell = getCell(cell.getCoordinate());
         if (!Utils.coordinatesAreEqual(start, aStarCell.getCoordinate())) {
-            aStarCell.reset();
+            aStarCell.reset(false);
+        } else {
+            aStarCell.reset(true);
         }
         aStarCell.updateStatus(isNotException(cell) && cell.isBusy());
         aStarCell.updateHeuristicDistance(end);
@@ -195,18 +197,18 @@ public class AStar implements Drawable {
                 .forEach(c1 -> Arrays.stream(c1)
                         .forEach(c2 -> {
                             if (Utils.coordinatesAreEqual(start, c2.getCoordinate())) {
-                                graphics.setColor(Color.RED);
-                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
+//                                graphics.setColor(Color.RED);
+//                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
                             } else if (Utils.coordinatesAreEqual(end, c2.getCoordinate())) {
-                                graphics.setColor(Color.GREEN);
-                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
+//                                graphics.setColor(Color.GREEN);
+//                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
                             } else if (c2.isVisited()) {
-                                graphics.setColor(Color.BLUE);
-                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
+//                                graphics.setColor(Color.BLUE);
+//                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
                             }
                         }));
         path.forEach(coordinate -> {
-            graphics.setColor(Color.PINK);
+            graphics.setColor(Color.BLUE);
             graphics.fill(new Ellipse2D.Double(coordinate.getX() + 3, coordinate.getY() + 3, 4, 4));
         });
     }
@@ -231,8 +233,8 @@ public class AStar implements Drawable {
             this.heuristicDistance = Math.abs(thisCoordinate.getX() - coordinate.getX()) + Math.abs(thisCoordinate.getY() - coordinate.getY());
         }
 
-        public void reset() {
-            visited = false;
+        public void reset(boolean visited) {
+            this.visited = visited;
         }
 
         public void visit(double delta) {

@@ -18,13 +18,13 @@ public class Main {
         Field field = new Field();
         window.add(field);
 
-        startFieldRenderer(field);
+//        startFieldRenderer(field);
 
-        Head head = new Head(new Coordinate(70, 70));
+        Head head = new Head(new Coordinate(10, 10));
         Snake snake = new Snake(head);
         field.add(snake);
 
-        Border border = new Border(new Size(300, 300), new Coordinate(10, 10));
+        Border border = new Border(new Size(50, 50), new Coordinate(10, 10));
         field.add(border);
 
         Grid grid = new Grid(border);
@@ -37,7 +37,7 @@ public class Main {
         field.add(food);
 
         refresh(cells, snake, Optional.of(food));
-        AStar aStar = new AStar(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(snake.getTailCoordinate()), food);
+        AStar aStar = new AStar(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(food.getCoordinate()), food);
         field.add(aStar);
         aStar.buildPath();
 
@@ -47,7 +47,7 @@ public class Main {
             do {
                 field.repaint();
                 try {
-                    TimeUnit.MILLISECONDS.sleep(100);
+                    TimeUnit.MILLISECONDS.sleep(500);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -63,13 +63,15 @@ public class Main {
                 }
                 refresh(cells, snake, Optional.of(food));
                 snake.growTail();
+                aStar.update(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(food.getCoordinate()), food);
+                aStar.buildPath();
             } while (!gameIsOver(snake, border));
             System.out.println("Game is over");
             System.out.println(score);
         };
         Thread thread = new Thread(runnable);
         thread.setDaemon(true);
-//        thread.start();
+        thread.start();
 
         window.addKeyListener(new KeyListener() {
             @Override
@@ -94,10 +96,10 @@ public class Main {
                     case KeyEvent.VK_SPACE:
                         break;
                 }
-                snake.move();
-                refresh(cells, snake, Optional.of(food));
-                aStar.update(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(snake.getTailCoordinate()), food);
-                aStar.buildPath();
+//                snake.move();
+//                refresh(cells, snake, Optional.of(food));
+//                aStar.update(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(snake.getTailCoordinate()), food);
+//                aStar.buildPath();
             }
 
             @Override
