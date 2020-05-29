@@ -5,13 +5,17 @@ import com.mylllket.inc.interfaces.actions.Drawable;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.stream.Stream;
 
 public class AStar implements Drawable {
     private final UUID id = UUID.randomUUID();
     private final AStarCell[][] cells;
-    private final LinkedList<Coordinate> path = new LinkedList<>();
+    private final ConcurrentLinkedDeque<Coordinate> path = new ConcurrentLinkedDeque<>();
     private final Coordinate start;
     private final Coordinate end;
     private int visitedNodes = 0;

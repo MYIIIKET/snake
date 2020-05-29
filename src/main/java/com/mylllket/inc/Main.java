@@ -112,11 +112,6 @@ public class Main {
     private static void startFieldRenderer(Field field) {
         Runnable renderer = () -> {
             while (true) {
-                try {
-                    TimeUnit.MILLISECONDS.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 field.repaint();
             }
         };
