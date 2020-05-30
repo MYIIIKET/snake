@@ -99,6 +99,9 @@ public class AStar implements Drawable {
             if (visitedNodesPrev == visitedNodes) {
                 break;
             }
+            if (getCell(new Coordinate(end)).isVisited()) {
+                break;
+            }
         }
 
         Coordinate e = new Coordinate(end);
@@ -211,12 +214,12 @@ public class AStar implements Drawable {
 //                                graphics.setColor(Color.GREEN);
 //                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
                             } else if (c2.isVisited()) {
-//                                graphics.setColor(Color.BLUE);
-//                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
+                                graphics.setColor(Color.BLUE);
+                                graphics.fill(new Ellipse2D.Double(c2.getCoordinate().getX() + 3, c2.getCoordinate().getY() + 3, 4, 4));
                             }
                         }));
         path.forEach(coordinate -> {
-            graphics.setColor(Color.BLUE);
+            graphics.setColor(Color.RED);
             graphics.fill(new Ellipse2D.Double(coordinate.getX() + 3, coordinate.getY() + 3, 4, 4));
         });
     }
