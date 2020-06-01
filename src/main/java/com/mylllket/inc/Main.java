@@ -24,7 +24,7 @@ public class Main {
         Snake snake = new Snake(head);
         field.add(snake);
 
-        Border border = new Border(new Size(100, 100), new Coordinate(100, 100));
+        Border border = new Border(new Size(50, 50), new Coordinate(100, 100));
         field.add(border);
 
         Grid grid = new Grid(border);
@@ -65,6 +65,7 @@ public class Main {
                 snake.growTail();
                 aStar.update(cells, new Coordinate(snake.getHeadCoordinate()), new Coordinate(food.getCoordinate()), food);
                 aStar.buildPath();
+                System.out.println(aStar.havePath());
             } while (!gameIsOver(snake, border));
             System.out.println("Game is over");
             System.out.println(score);

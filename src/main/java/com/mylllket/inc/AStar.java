@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class AStar implements Drawable {
@@ -138,6 +139,12 @@ public class AStar implements Drawable {
             }
             last = new Coordinate(path.getLast());
         }
+    }
+
+    public boolean havePath() {
+        Predicate<Coordinate> haveStart = coordinate -> Utils.coordinatesAreEqual(coordinate, start);
+        Predicate<Coordinate> haveEnd = coordinate -> Utils.coordinatesAreEqual(coordinate, end);
+        return path.stream().anyMatch(haveStart) && path.stream().anyMatch(haveEnd);
     }
 
     private Optional<AStarCell> getNeighbor(int i, int j) {
