@@ -5,13 +5,12 @@ import com.mylllket.inc.Direction;
 import com.mylllket.inc.Size;
 import com.mylllket.inc.interfaces.actions.Drawable;
 import com.mylllket.inc.interfaces.actions.Movable;
+import com.mylllket.inc.utils.Utils;
 
 import java.awt.*;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.function.Predicate;
-
-import static com.mylllket.inc.Utils.coordinatesAreEqual;
 
 public class Snake implements Movable, Drawable {
 
@@ -62,6 +61,10 @@ public class Snake implements Movable, Drawable {
         }
     }
 
+    public Direction getDirection() {
+        return head.getDirection();
+    }
+
     public boolean consume(Food food) {
         if (canConsume(food)) {
             return consumedFood.add(new Food(new Coordinate(food.getCoordinate())));
@@ -70,7 +73,7 @@ public class Snake implements Movable, Drawable {
     }
 
     public boolean canConsume(Food food) {
-        return coordinatesAreEqual(head, food);
+        return Utils.coordinatesAreEqual(head, food);
     }
 
     public void growTail() {
@@ -95,7 +98,7 @@ public class Snake implements Movable, Drawable {
         final Predicate<Food> foodPredicate;
         if (body.size() > 0) {
             Segment tail = body.getLast();
-            foodPredicate = food -> food.isProcessed() && coordinatesAreEqual(tail, food);
+            foodPredicate = food -> food.isProcessed() && Utils.coordinatesAreEqual(tail, food);
         } else {
             foodPredicate = Food::isProcessed;
         }
@@ -139,12 +142,12 @@ public class Snake implements Movable, Drawable {
     }
 
     public boolean isNotValid() {
-        return body.stream().anyMatch(segment -> coordinatesAreEqual(segment, head));
+        return body.stream().anyMatch(segment -> Utils.coordinatesAreEqual(segment, head));
     }
 
     public boolean clashesWith(Coordinate coordinate) {
-        return coordinatesAreEqual(coordinate, head.getCoordinate())
-                || body.stream().anyMatch(segment -> coordinatesAreEqual(coordinate, segment.getCoordinate()))
-                || consumedFood.stream().anyMatch(food -> coordinatesAreEqual(coordinate, food.getCoordinate()));
+        return Utils.coordinatesAreEqual(coordinate, head.getCoordinate())
+                || body.stream().anyMatch(segment -> Utils.coordinatesAreEqual(coordinate, segment.getCoordinate()))
+                || consumedFood.stream().anyMatch(food -> Utils.coordinatesAreEqual(coordinate, food.getCoordinate()));
     }
 }

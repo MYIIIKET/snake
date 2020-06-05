@@ -2,6 +2,7 @@ package com.mylllket.inc;
 
 import com.mylllket.inc.abstraction.snake.Segment;
 import com.mylllket.inc.interfaces.actions.Drawable;
+import com.mylllket.inc.utils.Utils;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

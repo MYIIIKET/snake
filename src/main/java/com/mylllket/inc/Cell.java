@@ -23,7 +23,7 @@ public class Cell implements Drawable {
         this.isBusy = isBusy;
     }
 
-    protected boolean isBusy() {
+    public boolean isBusy() {
         return isBusy;
     }
 

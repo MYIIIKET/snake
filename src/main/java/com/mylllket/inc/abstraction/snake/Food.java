@@ -5,7 +5,7 @@ import com.mylllket.inc.Size;
 
 import java.awt.*;
 
-import static com.mylllket.inc.Utils.coordinatesAreEqual;
+import static com.mylllket.inc.utils.Utils.coordinatesAreEqual;
 
 public class Food extends Segment {
     private boolean processed = false;

@@ -14,6 +14,11 @@ public class Head extends Segment {
         this.direction = Direction.IDLE;
     }
 
+    public Head(Coordinate coordinate, Direction direction) {
+        super(new Size(10, 10), Color.GRAY, coordinate);
+        this.direction = direction;
+    }
+
     void updatePosition(double delta) {
         switch (direction) {
             case UP:
